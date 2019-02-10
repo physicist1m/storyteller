@@ -1,12 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { Provider } from 'react-redux';
+import store from './store';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import { BrowserRouter as Router} from 'react-router-dom';
+
+import App from './components/app';
+import ErrorBoundry from './components/error-boundry';
+import StoryTellerService from './services/storyteller-service';
+import { StoryTellerServiceProvider } from './components/storyteller-service-context';
+
+const storyTellerService = new StoryTellerService();
+
+ReactDOM.render(
+    <Provider store={store}>
+        <ErrorBoundry>
+            <StoryTellerServiceProvider value={storyTellerService}>
+                <Router>
+                    <App />
+                </Router>
+            </StoryTellerServiceProvider>
+        </ErrorBoundry>
+    </Provider>,
+    document.getElementById('root')
+);
